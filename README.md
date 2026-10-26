@@ -24,6 +24,7 @@
 ## Table of Contents
 
 - [Features](#features)
+- [Screenshots](#screenshots)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
 - [Architecture](#architecture)
@@ -63,6 +64,13 @@
 - SQLite by default, MySQL supported through environment variables.
 - Docker image, prebuilt binaries for Linux, macOS and Windows, an MSI installer and an install script.
 - Installable dashboard (PWA) available in 13 languages.
+
+## Screenshots
+
+| Dashboard | Test history |
+| --- | --- |
+| ![Pixies dashboard](docs/assets/images/en/interface.png) <br/> *Dashboard* | ![Pixies test history](docs/assets/images/en/tests.png) <br/> *Test history* |
+| ![Pixies settings](docs/assets/images/en/settings.png) <br/> *Settings* | ![Pixies statistics switcher](docs/assets/images/en/view.png) <br/> *Statistics switcher* |
 
 ## Quick Start
 
@@ -179,6 +187,8 @@ cd web && bun install && bun run dev
 The repository has no automated test suite; verify changes with the builds above and a manual run
 of the affected feature.
 
+Launch video and brand assets: [brand/](brand/) — see `brand/launch.mp4` and `brand/brand.md`.
+
 ## Deployment
 
 - **Docker** – build the image locally with `docker build -t pixies .`, or use the published
@@ -194,8 +204,8 @@ of the affected feature.
 
 - Open an issue for bugs and feature requests: <https://github.com/ikhsanddy/pixies/issues>
 - Read [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) before submitting.
-- Only `client/public/assets/locales/en.json` is edited in this repository; other locale files are
-  managed externally.
+- All locale files in `client/public/assets/locales/` are maintained in this repository and can be
+  updated with a pull request.
 - Keep pull requests focused and describe how the change was verified.
 
 ## License

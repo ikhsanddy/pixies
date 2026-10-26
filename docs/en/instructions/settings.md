@@ -92,9 +92,8 @@ you can pick a different preset (7, 30, 90, 180 days), enter any custom number o
 
 ### 🌍 Change language
 
-Pixies is available in multiple languages. With this option you can change the language. Do you
-want to participate and translate Pixies into another language? Then have a
-look [here](https://crowdin.com/project/pixies).
+Pixies is available in multiple languages. With this option you can change the language.
+Translations live in `client/public/assets/locales/` and can be updated by opening a pull request.
 
 ### 📊 Change view
 

@@ -46,8 +46,8 @@ scripts/  Installer, uninstaller and code generators
 - Follow the existing indentation, naming and import conventions of the directory you edit.
 - Styles are written in SCSS/Sass next to the components that use them.
 - Keep changes focused; do not reformat unrelated code or commit build output.
-- Only `client/public/assets/locales/en.json` is edited here. Other locale files are managed
-  outside this repository.
+- All locale files in `client/public/assets/locales/` are edited here. Submit translation updates
+  as pull requests.
 
 ## Commit messages
 
@@ -74,15 +74,15 @@ issues in the footer, for example `Fixes #123`.
    - `cd web && bun run build`
    - `cd docs && bun run build`
 4. Fill in the pull request template, including what changed and how you tested it.
-5. Keep one logical change per pull request. Do not include translations, generated indexes or
-   build output.
+5. Keep one logical change per pull request. Do not include generated indexes or build output;
+   translation updates are welcome as their own pull requests.
 
 CI runs the same build steps on pushes and pull requests to `master`. A pull request is merged
 once CI passes and a maintainer has reviewed it.
 
 ## Reporting bugs
 
-Open an issue using the bug report template (English or German) and include:
+Open an issue using the bug report template and include:
 
 - Pixies version and installation method (binary, Docker, source)
 - Operating system and browser

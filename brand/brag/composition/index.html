@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Pixies launch</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Inter";
+        src: url("assets/fonts/inter-400.woff2") format("woff2");
+        font-weight: 400;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("assets/fonts/inter-500.woff2") format("woff2");
+        font-weight: 500;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("assets/fonts/inter-600.woff2") format("woff2");
+        font-weight: 600;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("assets/fonts/jetbrains-mono-500.woff2") format("woff2");
+        font-weight: 500;
+        font-display: block;
+      }
+      :root {
+        --ground: #0b0f14;
+        --raised: #141a21;
+        --line: #232b34;
+        --text: #e6edf3;
+        --muted: #93a1ae;
+        --pulse: #35e0a0;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--ground);
+        font-family: "Inter", system-ui, sans-serif;
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        background: var(--ground);
+      }
+      .mono {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+      }
+      .caption {
+        position: absolute;
+        left: 140px;
+        top: 112px;
+        font-size: 44px;
+        font-weight: 500;
+        letter-spacing: -0.018em;
+        color: var(--text);
+      }
+      .brand-tag {
+        position: absolute;
+        left: 140px;
+        top: 108px;
+        font-size: 24px;
+        color: var(--muted);
+      }
+      /* scene 1 */
+      .scope {
+        position: absolute;
+        inset: 0;
+      }
+      .hook {
+        position: absolute;
+        left: 140px;
+        bottom: 150px;
+        font-size: 84px;
+        font-weight: 600;
+        letter-spacing: -0.032em;
+        line-height: 1.1;
+      }
+      .hook em {
+        font-style: normal;
+        color: var(--pulse);
+      }
+      /* scene 2 */
+      .s2-mark {
+        position: absolute;
+        left: 140px;
+        top: 300px;
+        width: 640px;
+      }
+      .s2-copy {
+        position: absolute;
+        left: 1040px;
+        top: 336px;
+        width: 740px;
+      }
+      .s2-copy h2 {
+        font-size: 66px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+      }
+      .s2-copy p {
+        margin-top: 28px;
+        font-size: 32px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      .s2-rule {
+        position: absolute;
+        left: 1040px;
+        top: 300px;
+        width: 96px;
+        height: 4px;
+        background: var(--pulse);
+        border-radius: 2px;
+        opacity: 0;
+      }
+      /* panel */
+      .panel {
+        position: absolute;
+        background: var(--raised);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+      }
+      .s3-panel {
+        left: 140px;
+        top: 220px;
+        width: 1640px;
+        height: 700px;
+      }
+      .s3-head {
+        position: absolute;
+        left: 60px;
+        top: 44px;
+        right: 60px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 28px;
+        color: var(--muted);
+      }
+      .chart {
+        position: absolute;
+        left: 60px;
+        top: 100px;
+        width: 1520px;
+        height: 360px;
+      }
+      .s3-stats {
+        position: absolute;
+        left: 60px;
+        top: 500px;
+        right: 60px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+      }
+      .stat {
+        padding-top: 26px;
+        border-top: 1px solid var(--line);
+      }
+      .stat .label {
+        font-size: 28px;
+        color: var(--muted);
+        letter-spacing: 0.1em;
+      }
+      .stat .value {
+        margin-top: 12px;
+        font-size: 54px;
+        letter-spacing: -0.01em;
+      }
+      .stat .value span {
+        font-size: 28px;
+        color: var(--muted);
+        margin-left: 8px;
+      }
+      /* scene 4 */
+      .cards {
+        position: absolute;
+        left: 140px;
+        top: 340px;
+        width: 1640px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+      }
+      .card {
+        height: 320px;
+        border-radius: 20px;
+        padding: 40px;
+        background: var(--raised);
+        border: 1px solid var(--line);
+      }
+      .card .name {
+        font-size: 28px;
+        color: var(--muted);
+        letter-spacing: 0.12em;
+      }
+      .card .ping {
+        margin-top: 56px;
+        font-size: 76px;
+        letter-spacing: -0.02em;
+      }
+      .card .ping span {
+        font-size: 28px;
+        color: var(--muted);
+        margin-left: 10px;
+      }
+      .card .sub {
+        margin-top: 10px;
+        font-size: 28px;
+        color: var(--muted);
+      }
+      .card .tick {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        background: var(--pulse);
+        margin-right: 12px;
+        vertical-align: 2px;
+      }
+      /* scene 5 */
+      .s5-alert {
+        left: 140px;
+        top: 300px;
+        width: 900px;
+        height: 420px;
+        padding: 44px;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 22px;
+        color: var(--pulse);
+        border: 1px solid #1f5a48;
+        background: rgba(53, 224, 160, 0.08);
+        border-radius: 999px;
+        padding: 8px 18px;
+        letter-spacing: 0.14em;
+      }
+      .s5-alert h3 {
+        margin-top: 28px;
+        font-size: 56px;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+      }
+      .s5-alert p {
+        margin-top: 16px;
+        font-size: 28px;
+        color: var(--muted);
+      }
+      .chips {
+        margin-top: 34px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        font-size: 28px;
+        color: var(--text);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px 18px;
+        letter-spacing: 0.1em;
+        background: #10151b;
+      }
+      .s5-metrics {
+        left: 1080px;
+        top: 300px;
+        width: 700px;
+        height: 420px;
+        padding: 44px;
+      }
+      .s5-metrics h3 {
+        margin-top: 26px;
+        font-size: 40px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+      }
+      .s5-metrics p {
+        margin-top: 14px;
+        font-size: 28px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .s5-metrics .rule {
+        margin-top: 34px;
+        height: 1px;
+        background: var(--line);
+      }
+      .s5-metrics .foot {
+        margin-top: 26px;
+        font-size: 20px;
+        color: var(--muted);
+      }
+      /* scene 6 */
+      .s6-wrap {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 34px;
+      }
+      .s6-mark {
+        width: 760px;
+      }
+      .s6-tag {
+        font-size: 38px;
+        color: var(--muted);
+        letter-spacing: -0.01em;
+      }
+      .s6-url {
+        font-size: 28px;
+        color: var(--pulse);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="20.5"
+      data-width="1920"
+      data-height="1080"
+      data-fps="30"
+    >
+      <section id="s1" class="clip scene" data-start="0" data-duration="2.735" data-track-index="0">
+        <svg class="scope" viewBox="0 0 1920 1080" aria-hidden="true">
+          <path
+            id="s1-pulse"
+            d="M120 560 H520 L600 320 L700 760 L800 420 H1240 L1330 560 H1800"
+            fill="none"
+            stroke="#35e0a0"
+            stroke-width="8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <circle id="s1-dot" cx="1800" cy="560" r="12" fill="#35e0a0" opacity="0" />
+        </svg>
+        <span class="brand-tag mono" data-layout-ignore>PIXIES</span>
+        <p class="hook" id="s1-line">Your line has a history.</p>
+      </section>
+
+      <section id="s2" class="clip scene" data-start="2.735" data-duration="3.83" data-track-index="0">
+        <img id="s2-wm" class="s2-mark" src="assets/brand/wordmark-dark.svg" alt="Pixies" />
+        <div class="s2-rule" id="s2-rule"></div>
+        <div class="s2-copy">
+          <h2 id="s2-h">Self-hosted internet speed analytics.</h2>
+          <p id="s2-p">Records your internet speed over a configurable retention period.</p>
+        </div>
+      </section>
+
+      <section id="s3" class="clip scene" data-start="6.565" data-duration="3.8" data-track-index="0">
+        <p class="caption" id="s3-cap">Speed, ping and jitter, recorded on a schedule.</p>
+        <div class="panel s3-panel" id="s3-panel">
+          <div class="s3-head mono">
+            <span>SPEED HISTORY</span>
+            <span>LAST 30 DAYS</span>
+          </div>
+          <svg class="chart" viewBox="0 0 1520 360" aria-hidden="true">
+            <g stroke="#232b34" stroke-width="1">
+              <line x1="60" y1="30" x2="1460" y2="30" />
+              <line x1="60" y1="120" x2="1460" y2="120" />
+              <line x1="60" y1="210" x2="1460" y2="210" />
+              <line x1="60" y1="300" x2="1460" y2="300" />
+            </g>
+            <path id="s3-area" d="M60.0 175.3 L108.3 152.1 L156.6 131.8 L204.8 141.5 L253.1 121.2 L301.4 134.2 L349.7 103.5 L397.9 109.3 L446.2 89.9 L494.5 106.2 L542.8 117.9 L591.0 95.3 L639.3 80.6 L687.6 87.9 L735.9 106.2 L784.1 75.5 L832.4 82.6 L880.7 66.1 L929.0 81.1 L977.2 96.1 L1025.5 72.3 L1073.8 60.0 L1122.1 76.8 L1170.3 57.8 L1218.6 69.6 L1266.9 48.5 L1315.2 63.0 L1363.4 82.6 L1411.7 62.5 L1460.0 49.2 L1460 360 L60 360 Z" fill="#35e0a0" opacity="0" />
+            <path
+              id="s3-line"
+              d="M60.0 175.3 L108.3 152.1 L156.6 131.8 L204.8 141.5 L253.1 121.2 L301.4 134.2 L349.7 103.5 L397.9 109.3 L446.2 89.9 L494.5 106.2 L542.8 117.9 L591.0 95.3 L639.3 80.6 L687.6 87.9 L735.9 106.2 L784.1 75.5 L832.4 82.6 L880.7 66.1 L929.0 81.1 L977.2 96.1 L1025.5 72.3 L1073.8 60.0 L1122.1 76.8 L1170.3 57.8 L1218.6 69.6 L1266.9 48.5 L1315.2 63.0 L1363.4 82.6 L1411.7 62.5 L1460.0 49.2"
+              fill="none"
+              stroke="#35e0a0"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              id="s3-ping"
+              d="M60.0 252.7 L108.3 275.3 L156.6 275.3 L204.8 232.0 L253.1 252.7 L301.4 275.3 L349.7 252.7 L397.9 209.3 L446.2 252.7 L494.5 275.3 L542.8 275.3 L591.0 252.7 L639.3 161.3 L687.6 145.2 L735.9 209.3 L784.1 252.7 L832.4 275.3 L880.7 275.3 L929.0 252.7 L977.2 232.0 L1025.5 275.3 L1073.8 275.3 L1122.1 252.7 L1170.3 275.3 L1218.6 275.3 L1266.9 252.7 L1315.2 275.3 L1363.4 252.7 L1411.7 275.3 L1460.0 275.3"
+              fill="none"
+              stroke="#93a1ae"
+              stroke-width="2"
+              stroke-dasharray="6 8"
+              opacity="0"
+            />
+          </svg>
+          <div class="s3-stats">
+            <div class="stat" id="s3-st1">
+              <div class="label mono">DOWNLOAD</div>
+              <div class="value mono">942.6<span>Mbps</span></div>
+            </div>
+            <div class="stat" id="s3-st2">
+              <div class="label mono">UPLOAD</div>
+              <div class="value mono">51.4<span>Mbps</span></div>
+            </div>
+            <div class="stat" id="s3-st3">
+              <div class="label mono">PING</div>
+              <div class="value mono">8<span>ms</span></div>
+            </div>
+            <div class="stat" id="s3-st4">
+              <div class="label mono">JITTER</div>
+              <div class="value mono">0.7<span>ms</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="s4" class="clip scene" data-start="10.365" data-duration="3.83" data-track-index="0">
+        <p class="caption" id="s4-cap">Bring your own servers.</p>
+        <div class="cards">
+          <div class="card" id="s4-c1">
+            <div class="name mono">OOKLA</div>
+            <div class="ping mono">12<span>ms</span></div>
+            <div class="sub"><span class="tick"></span>median latency</div>
+          </div>
+          <div class="card" id="s4-c2">
+            <div class="name mono">LIBRESPEED</div>
+            <div class="ping mono">18<span>ms</span></div>
+            <div class="sub"><span class="tick"></span>median latency</div>
+          </div>
+          <div class="card" id="s4-c3">
+            <div class="name mono">CLOUDFLARE</div>
+            <div class="ping mono">9<span>ms</span></div>
+            <div class="sub"><span class="tick"></span>median latency</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="s5" class="clip scene" data-start="14.195" data-duration="3.28" data-track-index="0">
+        <p class="caption" id="s5-cap">Know before your line drops.</p>
+        <div class="panel s5-alert" id="s5-a">
+          <span class="tag mono" data-layout-ignore>HEALTH CHECK</span>
+          <h3>Line degraded</h3>
+          <p>Download under 50 Mbps across three consecutive tests</p>
+          <div class="chips">
+            <span class="chip mono" id="s5-ch1">EMAIL</span>
+            <span class="chip mono" id="s5-ch2">SIGNAL</span>
+            <span class="chip mono" id="s5-ch3">WHATSAPP</span>
+            <span class="chip mono" id="s5-ch4">TELEGRAM</span>
+          </div>
+        </div>
+        <div class="panel s5-metrics" id="s5-m">
+          <span class="tag mono" data-layout-ignore>INTEGRATIONS</span>
+          <h3>Prometheus and Grafana</h3>
+          <p>Scrape Pixies metrics into the dashboards your team already watches.</p>
+          <div class="rule"></div>
+          <div class="foot mono" data-layout-ignore>CSV AND JSON EXPORT</div>
+        </div>
+      </section>
+
+      <section id="s6" class="clip scene" data-start="17.475" data-duration="3.025" data-track-index="0">
+        <div class="s6-wrap">
+          <img id="s6-wm" class="s6-mark" src="assets/brand/wordmark-dark.svg" alt="Pixies" />
+          <p id="s6-tag" class="s6-tag">Self-hosted speed analytics.</p>
+          <p id="s6-url" class="s6-url mono">Open source on GitHub</p>
+        </div>
+      </section>
+
+      <audio
+        id="music"
+        data-timeline-role="music"
+        data-start="0"
+        data-duration="20.5"
+        data-track-index="8"
+        src="assets/music/pulse.mp3"
+        data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0},{"t":0.8,"v":0.34},{"t":19.0,"v":0.34},{"t":20.4,"v":0}]}]}'
+      ></audio>
+      <audio id="sfx-panel" data-start="6.67" data-duration="0.31" data-track-index="9" data-volume="0.12" src="assets/sfx/switch1.ogg"></audio>
+      <audio id="sfx-cards" data-start="10.57" data-duration="0.31" data-track-index="10" data-volume="0.12" src="assets/sfx/switch1.ogg"></audio>
+      <audio id="sfx-alert" data-start="14.33" data-duration="0.31" data-track-index="11" data-volume="0.12" src="assets/sfx/switch1.ogg"></audio>
+    </div>
+    <script>
+      const pulse = document.getElementById("s1-pulse");
+      const len = pulse.getTotalLength();
+      pulse.style.strokeDasharray = String(len);
+      gsap.set(pulse, { strokeDashoffset: len });
+
+      const line = document.getElementById("s3-line");
+      const lineLen = line.getTotalLength();
+      line.style.strokeDasharray = String(lineLen);
+      gsap.set(line, { strokeDashoffset: lineLen });
+
+      const tl = gsap.timeline({ paused: true });
+      const add = (target, from, to, at) => tl.fromTo(target, from, to, at);
+
+      // scene 1 — hook (0.0s, beat-locked 0.00)
+      add("#s1-pulse", { strokeDashoffset: len }, { strokeDashoffset: 0, duration: 1.15, ease: "power2.inOut" }, 0.1);
+      add("#s1-dot", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 1.05);
+      add("#s1-line", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 1.0);
+      add(".brand-tag", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.25);
+
+      // scene 2 — reveal (2.8s)
+      add(".s2-mark", { opacity: 0, x: -34 }, { opacity: 1, x: 0, duration: 0.75, ease: "power3.out" }, 2.85);
+      add(".s2-rule", { opacity: 0, scaleX: 0.2 }, { opacity: 1, scaleX: 1, duration: 0.5, ease: "power2.out" }, 3.15);
+      add("#s2-h", { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 3.3);
+      add("#s2-p", { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 3.6);
+
+      // scene 3 — speed history (6.4s, beat-locked 6.40)
+      add("#s3-cap", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 6.62);
+      add("#s3-panel", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 6.72);
+      add(".s3-head", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 7.05);
+      add("#s3-line", { strokeDashoffset: lineLen }, { strokeDashoffset: 0, duration: 1.1, ease: "power2.inOut" }, 7.05);
+      add("#s3-area", { opacity: 0 }, { opacity: 0.12, duration: 0.7 }, 7.45);
+      add("#s3-ping", { opacity: 0 }, { opacity: 0.65, duration: 0.6 }, 7.58);
+      ["#s3-st1", "#s3-st2", "#s3-st3", "#s3-st4"].forEach((sel, i) => {
+        add(sel, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 8.0 + i * 0.16);
+      });
+
+      // scene 4 — servers (10.4s)
+      add("#s4-cap", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 10.45);
+      ["#s4-c1", "#s4-c2", "#s4-c3"].forEach((sel, i) => {
+        add(sel, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 10.58 + i * 0.16);
+      });
+
+      // scene 5 — health checks (14.0s)
+      add("#s5-cap", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 14.25);
+      add("#s5-a", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 14.35);
+      add("#s5-m", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 14.5);
+      ["#s5-ch1", "#s5-ch2", "#s5-ch3", "#s5-ch4"].forEach((sel, i) => {
+        add(sel, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 14.72 + i * 0.12);
+      });
+
+      // scene 6 — outro (17.2s, beat-locked 17.20)
+      add("#s6-wm", { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" }, 17.55);
+      add("#s6-tag", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 17.75);
+      add("#s6-url", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 18.0);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

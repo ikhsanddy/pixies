@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none" role="img" aria-labelledby="t d">
+  <title id="t">Pixies (light background)</title>
+  <desc id="d">Deep pulse green #04785C mark for light surfaces (#F4F7F4 and lighter).</desc>
+  <g>
+    <g><path d="M15 63H33L45 23L59 77L69 52" fill="none" stroke="#04785C" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><rect x="66" y="34" width="16" height="16" rx="6" fill="#04785C"/><rect x="78" y="19" width="9" height="9" rx="3" fill="#04785C"/></g>
+  </g>
+</svg>

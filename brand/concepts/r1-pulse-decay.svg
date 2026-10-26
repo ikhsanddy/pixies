@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Pixies refinement r1-pulse-decay.svg">
+<g fill="currentColor">
+    <path d="M16 62 H34 L46 22 L60 78 L70 52" fill="none" stroke="currentColor" stroke-width="10"
+      stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="70" y="38" width="15" height="15" rx="5"/>
+    <rect x="78" y="21" width="9" height="9" rx="3"/>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Pixies refinement r2-pixel-p.svg">
+<g fill="currentColor">
+    <rect x="26" y="18" width="17" height="17" rx="5.5"/>
+    <rect x="26" y="41.5" width="17" height="17" rx="5.5"/>
+    <rect x="26" y="65" width="17" height="17" rx="5.5"/>
+    <path d="M40 30 H56 A22 22 0 0 1 56 74 H44" fill="none" stroke="currentColor" stroke-width="10"
+      stroke-linecap="round"/>
+  </g>
+</svg>

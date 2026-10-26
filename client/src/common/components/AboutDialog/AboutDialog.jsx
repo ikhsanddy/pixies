@@ -25,7 +25,7 @@ export const AboutDialog = ({ open, onClose }) => {
     {
       icon: faLanguage,
       label: t("about.translate"),
-      url: "https://crowdin.com/project/pixies",
+      url: PROJECT_URL + "/tree/master/client/public/assets/locales",
     },
   ];
 

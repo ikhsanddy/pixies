@@ -1,0 +1,103 @@
+@use "@/common/styles/colors" as *
+
+.tutorials-page
+  min-height: 100vh
+  padding: 120px 48px 80px
+  max-width: 1200px
+  margin: 0 auto
+
+.tutorials-header
+  text-align: center
+  margin-bottom: 48px
+  
+  h1
+    font-size: 2.5rem
+    font-weight: 700
+    margin-bottom: 8px
+    
+  p
+    font-size: 1.125rem
+    color: $text-secondary
+
+.tutorials-section
+  margin-bottom: 48px
+  
+  &:last-child
+    margin-bottom: 0
+
+  h2
+    font-size: 1.125rem
+    font-weight: 600
+    color: $text-secondary
+    margin-bottom: 16px
+
+.tutorials-grid
+  display: grid
+  grid-template-columns: repeat(4, 1fr)
+  gap: 12px
+
+.tutorial-card
+  position: relative
+  aspect-ratio: 16 / 9
+  border-radius: 10px
+  overflow: hidden
+  cursor: pointer
+
+.doc-card
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 8px
+  padding: 16px
+  text-align: center
+  background: $background-lighter
+  border: 1px solid $border-color
+  color: $text
+  text-decoration: none
+  transition: all 0.2s ease
+
+  &:hover
+    border-color: $primary
+    color: $primary
+
+  svg
+    font-size: 1.5rem
+
+  span
+    font-size: 0.875rem
+    font-weight: 500
+
+.add-card
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 8px
+  background: $background-lighter
+  border: 1px dashed $border-color
+  color: $text-muted
+  text-decoration: none
+  transition: all 0.2s ease
+
+  &:hover
+    border-color: $primary
+    color: $primary
+    background: rgba($primary, 0.05)
+
+  svg
+    font-size: 1.5rem
+    
+  span
+    font-size: 0.875rem
+    font-weight: 500
+
+@media (max-width: 768px)
+  .tutorials-page
+    padding: 100px 24px 60px
+    
+  .tutorials-header h1
+    font-size: 2rem
+
+  .tutorials-grid
+    grid-template-columns: repeat(2, 1fr)

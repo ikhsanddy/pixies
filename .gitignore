@@ -1,0 +1,44 @@
+# code editors
+/.idea
+
+# dependencies
+/node_modules
+/client/node_modules
+/web/node_modules
+/docs/node_modules
+/.pnp
+.pnp.js
+
+# generated
+/server/migrations/index.js
+/server/integrations/index.js
+/server/clientEmbed.js
+
+# production
+/build
+/client/build
+/web/dist
+/data
+/bin
+/Pixies
+/Pixies.exe
+
+# docs
+/docs/.vitepress/dist
+/docs/.vitepress/cache
+
+# brand production caches and intermediate renders
+/brand/**/node_modules
+/brand/**/.hyperframes
+/brand/**/renders
+/brand/**/*.webm
+/brand/**/*.mov
+
+# local environment
+.env
+.env.local
+.env.*.local
+
+# logs and OS files
+*.log
+.DS_Store

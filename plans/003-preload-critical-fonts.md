@@ -61,7 +61,7 @@ Audit baseline on the production preview:
 - Font requests started at about 136ms, after the CSS request at about 25ms.
 - These are local observations, not field data or guaranteed improvement thresholds.
 
-Repo conventions: two-space HTML indentation, double-quoted attributes, plain JavaScript/JSX elsewhere. `brand/brand.md:47-57` specifies Inter for UI/product type and a system fallback; keep both unchanged.
+Repo conventions: the current HTML entry uses four-space indentation and double-quoted attributes; match it. Plain JavaScript/JSX elsewhere. `brand/brand.md:47-57` specifies Inter for UI/product type and a system fallback; keep both unchanged.
 
 ## Commands you will need
 

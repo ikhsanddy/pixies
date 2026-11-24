@@ -1,4 +1,7 @@
 import InterfaceImage from "@/common/assets/interface.png";
+import Interface400 from "@/common/assets/interface-400.webp";
+import Interface800 from "@/common/assets/interface-800.webp";
+import Interface1300 from "@/common/assets/interface-1300.webp";
 import "./styles.sass";
 import {faArrowRight} from "@fortawesome/free-solid-svg-icons";
 import {faGithub} from "@fortawesome/free-brands-svg-icons";
@@ -48,16 +51,23 @@ export const Home = () => {
 
                     <div className="hero-visual">
                         <div className="interface-preview">
-                            <img
-                                src={InterfaceImage}
-                                alt="Pixies Interface"
-                                width="1873"
-                                height="896"
-                                loading="eager"
-                                fetchPriority="high"
-                                decoding="async"
-                                draggable={false}
-                            />
+                            <picture>
+                                <source
+                                    type="image/webp"
+                                    srcSet={`${Interface400} 400w, ${Interface800} 800w, ${Interface1300} 1300w`}
+                                    sizes="(max-width: 640px) calc(100vw - 3rem), 650px"
+                                />
+                                <img
+                                    src={InterfaceImage}
+                                    alt="Pixies Interface"
+                                    width="1873"
+                                    height="896"
+                                    loading="eager"
+                                    fetchPriority="high"
+                                    decoding="async"
+                                    draggable={false}
+                                />
+                            </picture>
                         </div>
                     </div>
                 </div>

@@ -317,7 +317,7 @@ Expected: all assertions pass. The 800px total should be about 235KB; the deskto
 
 Start the production preview. In Chrome DevTools device toolbar, test these five cases with cache disabled:
 
-| Viewport | DPR | Expected `naturalWidth` for hero | Expected `naturalWidth` for each feature |
+| Viewport | DPR | Expected selected WebP width for hero | Expected selected WebP width for each feature |
 |---|---:|---:|---:|
 | 390x844 | 1 | 400 | 400 |
 | 390x844 | 2 | 800 | 800 |
@@ -343,15 +343,18 @@ For each case, load `/`, then run this async browser-console check. It scrolls e
   return images.map((image) => ({
     alt: image.alt,
     currentSrc: image.currentSrc,
+    selectedWidth: Number(image.currentSrc.match(/-(400|800|1200|1300)-/)?.[1]),
     naturalWidth: image.naturalWidth,
     naturalHeight: image.naturalHeight,
     renderedWidth: image.clientWidth,
-    renderedHeight: image.clientHeight
+    renderedHeight: image.clientHeight,
+    renderedRatio: image.clientWidth / image.clientHeight,
+    naturalRatio: image.naturalWidth / image.naturalHeight
   }));
 })()
 ```
 
-**Verify**: `currentSrc` ends in the expected `.webp` variant; `naturalWidth` matches the table; `clientWidth/clientHeight` preserves the intrinsic aspect ratio. Compare full-page captures at 390x844 and 1440x900 with the pre-change captures from Step 1, using the same settled state. Text, crop, colors, borders, transforms, and spacing must remain visually unchanged. No console errors appear.
+**Verify**: `currentSrc` ends in the expected `.webp` variant and `selectedWidth` matches the table. Chrome reports `naturalWidth`/`naturalHeight` as density-corrected CSS intrinsic dimensions for `srcset` images, so they are not expected to equal the encoded candidate width; exact encoded dimensions were already verified in Step 1. Compare `renderedRatio` with the selected candidate's Step 1 aspect ratio, allowing normal integer rounding. Compare full-page captures at 390x844 and 1440x900 with the pre-change captures from Step 1, using the same settled state. Text, crop, colors, borders, transforms, and spacing must remain visually unchanged. Integer-rounded responsive rasters may change a rendered dimension or the document height by at most 1 CSS pixel; this is an explicit tradeoff that avoids distorting or cropping the specified variants to force fractional source dimensions. Record those numeric deltas, require no visible crop, color, spacing, or layout regression, and stop if any rendered dimension or document-height delta exceeds 1 CSS pixel. No console errors appear.
 
 ## Test plan
 
@@ -363,7 +366,7 @@ No unit-test framework exists. The regression checks are:
 - Browser selects the expected candidate in all five viewport/DPR cases.
 - Original PNG fallbacks remain in markup and render when WebP sources are unavailable.
 - Lazy feature images still load on scroll.
-- Side-by-side screenshots confirm no visual change.
+- Side-by-side screenshots confirm no visible change; integer-rounding deltas stay within 1 CSS pixel per rendered dimension and for document height.
 
 ## Done criteria
 
@@ -388,7 +391,7 @@ Stop and report if:
 - The PNGs differ from the dimensions in the current-state table.
 - Lossless encoding cannot meet the byte ceilings without resizing beyond the specified widths.
 - A browser selects a candidate outside the expected table; investigate `sizes` before changing layout.
-- Visual comparison shows any crop, color, geometry, or spacing change.
+- Visual comparison shows a visible crop, color, spacing, or layout regression, or any rendered-dimension or document-height delta exceeds 1 CSS pixel from integer-rounded responsive rasters.
 - The selective commit would include `brand/launch.mp4` or `brand/pixies.mp4`.
 
 ## Maintenance notes

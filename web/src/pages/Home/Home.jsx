@@ -48,7 +48,16 @@ export const Home = () => {
 
                     <div className="hero-visual">
                         <div className="interface-preview">
-                            <img src={InterfaceImage} alt="Pixies Interface" draggable={false}/>
+                            <img
+                                src={InterfaceImage}
+                                alt="Pixies Interface"
+                                width="1873"
+                                height="896"
+                                loading="eager"
+                                fetchPriority="high"
+                                decoding="async"
+                                draggable={false}
+                            />
                         </div>
                     </div>
                 </div>

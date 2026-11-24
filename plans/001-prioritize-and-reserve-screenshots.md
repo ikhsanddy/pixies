@@ -112,12 +112,14 @@ There is no automated test suite (`README.md:187-188`). Browser checks below use
 
 ## Scope
 
-**In scope** (the only files to modify):
+**In scope** (four source/Sass files plus authorized task documentation):
 
 - `web/src/pages/Home/Home.jsx`
 - `web/src/pages/Home/components/Features/Features.jsx`
 - `web/src/pages/Home/styles.sass`
 - `web/src/pages/Home/components/Features/styles.sass`
+- `plans/001-prioritize-and-reserve-screenshots.md` (verification corrections)
+- `plans/README.md` (row 001 status only)
 
 **Out of scope** (do NOT touch):
 
@@ -133,8 +135,8 @@ There is no automated test suite (`README.md:187-188`). Browser checks below use
 The operator requires each completed task to be committed and pushed separately to `origin/master`.
 
 - Do not create a branch.
-- After every gate passes, commit only the four in-scope files with `perf(web): prioritize and reserve hero screenshots`.
-- Never use `git add .` or `git add -A`. Use the harness selective-commit tool when available; otherwise stage the four exact paths.
+- After every gate passes, commit only the four source/Sass files, this corrected plan, and `plans/README.md` with `perf(web): prioritize and reserve hero screenshots`.
+- Never use `git add .` or `git add -A`. Use the harness selective-commit tool when available; otherwise stage those six exact paths.
 - Push with `git push origin master`.
 - Confirm `git status --short` still shows the pre-existing brand deletion and untracked video, and that neither entered the commit.
 
@@ -157,7 +159,7 @@ In `web/src/pages/Home/Home.jsx:51`, change only the hero image to:
 />
 ```
 
-In `web/src/pages/Home/components/Features.jsx:18` and `:32`, change the two images to:
+In `web/src/pages/Home/components/Features/Features.jsx:18` and `:32`, change the two images to:
 
 ```jsx
 <img
@@ -197,35 +199,41 @@ This is required: HTML `height` attributes otherwise become presentational hints
 
 **Verify**: `rg -n -A3 '^  img$' web/src/pages/Home/styles.sass web/src/pages/Home/components/Features/styles.sass` → both blocks contain `width: 100%` followed by `height: auto`; all other declarations remain unchanged.
 
-### Step 3: Build and check rendered attributes
+### Step 3: Build and check attributes and intrinsic sizes
 
 **Verify**: `cd web && bun run build` → exit 0. The build may repeat the known `__dirname` and Sass `lighten()` warnings. It must not add a second JavaScript entry or fail resolution.
 
-Start the preview, open `http://127.0.0.1:4173/`, and run this in the browser console:
+Start the preview, open `http://127.0.0.1:4173/`, and scroll both feature images into view. Before recording final intrinsic sizes or post-load layout, wait until the hero and both feature images satisfy `img.complete && img.naturalWidth > 0`. Attributes may be inspected before load; zero natural dimensions before lazy loading is triggered are expected.
+
+Run this in the browser console:
 
 ```js
 [...document.images].map((image) => ({
   alt: image.alt,
+  attributeWidth: image.getAttribute("width"),
+  attributeHeight: image.getAttribute("height"),
   loading: image.loading,
   fetchPriority: image.fetchPriority,
   decoding: image.decoding,
-  width: image.width,
-  height: image.height,
+  clientWidth: image.clientWidth,
+  clientHeight: image.clientHeight,
   naturalWidth: image.naturalWidth,
   naturalHeight: image.naturalHeight,
-  ratioDelta: Math.abs(image.width / image.height - image.naturalWidth / image.naturalHeight)
+  ratioDelta: image.naturalWidth
+    ? Math.abs(image.clientWidth / image.clientHeight - image.naturalWidth / image.naturalHeight)
+    : null
 }))
 ```
 
-Expected: five image elements (the logo appears twice); the hero is eager/high/async with intrinsic size 1873x896; the two feature images are lazy/low/async with intrinsic sizes 1905x998 and 2400x1350; every screenshot `ratioDelta` is below 0.01 once loaded.
+Expected: five image elements (the logo appears twice); the hero has HTML attributes `1873` and `896` and is eager/high/async; the feature images have HTML attributes `1905`/`998` and `2400`/`1350` and are lazy/low/async. After the load wait, their `naturalWidth`/`naturalHeight` values match those dimensions and every screenshot `ratioDelta` is below 0.01. Use the untransformed `clientWidth`/`clientHeight` box for this ratio check because the hero has a 3D CSS transform.
 
 ### Step 4: Check layout reservation and priority
 
-In Chrome DevTools Network, enable request blocking for image requests and reload at 390x844. Before images load, record each screenshot's `getBoundingClientRect()` width and height. Unblock images, wait for them to load, and record the values again.
+At both 390x844 and 1440x900, block image transfers before response (pause image requests rather than failing them) and reload. Scroll both feature blocks into view while the requests remain paused so native lazy loading is triggered. Before unblocking, record each screenshot's `getBoundingClientRect()` width and height and the document positions of later sections.
 
-**Verify**: each screenshot's reserved width/height matches its final width/height within 1 CSS pixel; later sections do not jump when the image arrives. In the Network panel, the hero request has priority **High** and each feature request has priority **Low** once requested. Native lazy loading may still request near-viewport images early on slow connections; that is expected and is not a failure.
+Unblock the image requests, wait until all three screenshots satisfy `img.complete && img.naturalWidth > 0`, and record the same values again.
 
-Scroll both feature blocks into view.
+**Verify**: each screenshot's reserved width/height matches its final width/height within 1 CSS pixel; later sections do not jump when the image arrives. Use `getBoundingClientRect()` only for this blocked-versus-loaded geometry comparison, including the transformed hero. In the Network panel, the hero request has priority **High** and each feature request has priority **Low** once requested. Native lazy loading may still request near-viewport images early on slow connections; that is expected and is not a failure.
 
 **Verify**: both feature images finish loading and retain their current alt text and borders. No console errors appear.
 
@@ -248,7 +256,7 @@ ALL must hold:
 - [ ] Browser DOM assertions in step 3 pass.
 - [ ] Blocked-image layout comparison in step 4 passes at 390x844 and 1440x900.
 - [ ] Both feature images load when scrolled into view; no console errors.
-- [ ] `git status --short` contains no changes outside the four in-scope files except the preserved brand changes.
+- [ ] `git status --short` contains no changes outside the four source/Sass files, this plan, and `plans/README.md`, except the preserved brand changes.
 - [ ] `plans/README.md` status row is `DONE`.
 - [ ] The scoped commit is pushed to `origin/master`; the commit contains no `brand/` path.
 

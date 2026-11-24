@@ -15,7 +15,15 @@ export const Features = () => {
                     </p>
                 </div>
                 <div className="feature-image">
-                    <img src={Screenshot1} alt="Automated speed testing interface"/>
+                    <img
+                        src={Screenshot1}
+                        alt="Automated speed testing interface"
+                        width="1905"
+                        height="998"
+                        loading="lazy"
+                        fetchPriority="low"
+                        decoding="async"
+                    />
                 </div>
             </div>
 
@@ -29,7 +37,15 @@ export const Features = () => {
                     </p>
                 </div>
                 <div className="feature-image">
-                    <img src={Screenshot2} alt="Speed test analytics dashboard"/>
+                    <img
+                        src={Screenshot2}
+                        alt="Speed test analytics dashboard"
+                        width="2400"
+                        height="1350"
+                        loading="lazy"
+                        fetchPriority="low"
+                        decoding="async"
+                    />
                 </div>
             </div>
         </section>

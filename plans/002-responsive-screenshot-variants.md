@@ -2,7 +2,7 @@
 
 > **Executor instructions**: Follow this plan step by step. Run every verification command and confirm the expected result before moving on. If a STOP condition occurs, stop and report; do not improvise. Update this plan's row in `plans/README.md` when done, unless the reviewer maintains the index.
 >
-> **Drift check (run first)**: `git diff --stat 398dc2a..HEAD -- web/src/common/assets web/src/pages/Home/Home.jsx web/src/pages/Home/components/Features/Features.jsx`
+> **Drift check (run first)**: `git diff ffd4624 -- web/src/common/assets web/src/pages/Home/Home.jsx web/src/pages/Home/components/Features/Features.jsx` and `git status --short -- web/src/common/assets web/src/pages/Home/Home.jsx web/src/pages/Home/components/Features/Features.jsx`
 > If any in-scope file changed since this plan was written, compare the current-state excerpts with the live code. A mismatch is a STOP condition.
 
 ## Status
@@ -12,7 +12,7 @@
 - **Risk**: LOW
 - **Depends on**: `plans/001-prioritize-and-reserve-screenshots.md`
 - **Category**: perf
-- **Planned at**: commit `398dc2a`, 2026-11-24
+- **Planned at**: commit `ffd4624`, 2026-11-24
 
 ## Why this matters
 
@@ -93,7 +93,7 @@ Run commands from the repository root unless stated otherwise.
 | Build | `cd web && bun run build` | Exit 0; hashed WebP assets appear in `web/dist/assets/`. Existing Vite/Sass warnings are allowed. |
 | Lint baseline | `cd web && bun run lint` | Known baseline failure: ESLint 10 cannot find `eslint.config.*`. Do not fix lint config. |
 | Preview | `cd web && bun run preview -- --host 127.0.0.1 --port 4173` | Serves the production build; stop after browser checks. |
-| Scope check | `git status --short` | Only the in-scope assets and two JSX files changed, plus the pre-existing brand changes. |
+| Scope check | `git status --short` | Only the in-scope assets, two JSX files, and two plan files changed, plus the pre-existing brand changes. |
 
 There is no automated test suite (`README.md:187-188`). Use the build, exact asset checks, and browser checks below. Install no packages.
 
@@ -112,6 +112,8 @@ There is no automated test suite (`README.md:187-188`). Use the build, exact ass
 - `web/src/common/assets/sc2-1200.webp`
 - `web/src/pages/Home/Home.jsx`
 - `web/src/pages/Home/components/Features/Features.jsx`
+- `plans/README.md`
+- `plans/002-responsive-screenshot-variants.md`
 
 **Out of scope** (do NOT touch):
 
@@ -127,14 +129,18 @@ There is no automated test suite (`README.md:187-188`). Use the build, exact ass
 The operator requires each completed task to be committed and pushed separately to `origin/master`.
 
 - Do not create a branch.
-- After all gates pass, commit only the in-scope files with `perf(web): serve responsive lossless screenshots`.
-- Never use `git add .` or `git add -A`. Use the harness selective-commit tool when available; otherwise stage the eleven exact paths.
+- After all gates pass, commit the in-scope implementation files together with `plans/README.md` and this corrected plan file using `perf(web): serve responsive lossless screenshots`.
+- Never use `git add .` or `git add -A`. Use the harness selective-commit tool when available; otherwise stage the thirteen exact paths listed in Scope.
 - Push with `git push origin master`.
 - Confirm the commit contains no `brand/` path and the pre-existing brand changes remain in the worktree.
 
 ## Steps
 
-### Step 1: Generate lossless variants from the existing PNGs
+### Step 1: Capture the pre-change page and generate lossless variants
+
+Before creating or editing any image, build the current plan-001 state with `cd web && bun run build` and serve it with `cd web && bun run preview -- --host 127.0.0.1 --port 4173`. With cache disabled, wait for fonts and all images to settle, let the 1.5s hero underline animation finish, and capture full-page screenshots at 390x844 and 1440x900 into ignored files such as `web/node_modules/.cache/perf-baseline/mobile.png` and `web/node_modules/.cache/perf-baseline/desktop.png`. Do not commit these captures; keep them outside `dist/` because the next build empties it.
+
+**Verify**: `test -s web/node_modules/.cache/perf-baseline/mobile.png && test -s web/node_modules/.cache/perf-baseline/desktop.png` → exit 0 before any JSX edit.
 
 Run this from the repository root. It only writes the nine in-scope WebP files:
 
@@ -206,7 +212,7 @@ Replace the hero `<img>` with:
     <source
         type="image/webp"
         srcSet={`${Interface400} 400w, ${Interface800} 800w, ${Interface1300} 1300w`}
-        sizes="(max-width: 640px) calc(100vw - 3rem), (max-width: 1100px) calc(100vw - 6rem), 650px"
+        sizes="(max-width: 640px) calc(100vw - 3rem), 650px"
     />
     <img
         src={InterfaceImage}
@@ -309,38 +315,53 @@ Expected: all assertions pass. The 800px total should be about 235KB; the deskto
 
 ### Step 4: Verify browser candidate selection and visual parity
 
-Start the production preview. In Chrome DevTools device toolbar, test these four cases with cache disabled:
+Start the production preview. In Chrome DevTools device toolbar, test these five cases with cache disabled:
 
 | Viewport | DPR | Expected `naturalWidth` for hero | Expected `naturalWidth` for each feature |
 |---|---:|---:|---:|
 | 390x844 | 1 | 400 | 400 |
 | 390x844 | 2 | 800 | 800 |
+| 1000x800 | 1 | 800 | 800 |
 | 1440x900 | 1 | 800 | 800 |
 | 1440x900 | 2 | 1300 | 1200 |
 
-For each case, load `/`, scroll both feature blocks into view, and run:
+For each case, load `/`, then run this async browser-console check. It scrolls each lazy image into view, waits for load, and awaits decode before reading selection or dimensions:
 
 ```js
-[...document.querySelectorAll(".home-page picture img")].map((image) => ({
-  alt: image.alt,
-  currentSrc: image.currentSrc,
-  naturalWidth: image.naturalWidth,
-  naturalHeight: image.naturalHeight,
-  renderedWidth: image.getBoundingClientRect().width,
-  renderedHeight: image.getBoundingClientRect().height
-}))
+(async () => {
+  const images = [...document.querySelectorAll(".home-page picture img")];
+  for (const image of images) {
+    image.scrollIntoView({block: "center"});
+    if (!image.complete || image.naturalWidth === 0) {
+      await new Promise((resolve, reject) => {
+        image.addEventListener("load", resolve, {once: true});
+        image.addEventListener("error", reject, {once: true});
+      });
+    }
+    await image.decode();
+  }
+  return images.map((image) => ({
+    alt: image.alt,
+    currentSrc: image.currentSrc,
+    naturalWidth: image.naturalWidth,
+    naturalHeight: image.naturalHeight,
+    renderedWidth: image.clientWidth,
+    renderedHeight: image.clientHeight
+  }));
+})()
 ```
 
-**Verify**: `currentSrc` ends in the expected `.webp` variant; dimensions and rendered aspect ratios match the table and the existing layout. Compare screenshots at 390x844 and 1440x900 with the pre-change page. Text, crop, colors, borders, transforms, and spacing must remain visually unchanged. No console errors appear.
+**Verify**: `currentSrc` ends in the expected `.webp` variant; `naturalWidth` matches the table; `clientWidth/clientHeight` preserves the intrinsic aspect ratio. Compare full-page captures at 390x844 and 1440x900 with the pre-change captures from Step 1, using the same settled state. Text, crop, colors, borders, transforms, and spacing must remain visually unchanged. No console errors appear.
 
 ## Test plan
 
 No unit-test framework exists. The regression checks are:
 
 - Exact dimensions and byte ceilings for all nine generated files.
+- Pre-change screenshots are captured before JSX edits and retained outside the commit.
 - Production build emits the WebP assets.
-- Browser selects the expected candidate at mobile/desktop DPR1 and DPR2.
-- Original PNG fallbacks remain in markup and still render if WebP sources are removed in DevTools.
+- Browser selects the expected candidate in all five viewport/DPR cases.
+- Original PNG fallbacks remain in markup and render when WebP sources are unavailable.
 - Lazy feature images still load on scroll.
 - Side-by-side screenshots confirm no visual change.
 
@@ -352,11 +373,11 @@ ALL must hold:
 - [ ] All nine WebP files have the exact expected dimensions.
 - [ ] The 400px total is <=90,000 bytes; the 800px total is <=250,000 bytes; the desktop-DPR2 total is <=460,000 bytes.
 - [ ] `cd web && bun run build` exits 0 and emits all nine hashed WebP assets.
-- [ ] All four browser candidate-selection cases pass.
-- [ ] PNG fallbacks remain functional and visual comparison passes at 390x844 and 1440x900.
+- [ ] All five browser candidate-selection cases pass after lazy images finish loading and decoding.
+- [ ] Pre-change captures exist; PNG fallbacks remain functional and visual comparison passes at 390x844 and 1440x900.
 - [ ] `git status --short` contains no out-of-scope changes except the preserved brand changes.
-- [ ] `plans/README.md` status row is `DONE`.
-- [ ] The scoped commit is pushed to `origin/master`; the commit contains no `brand/` path.
+- [ ] `plans/README.md` status row is `DONE`, and this plan file is included if the executor corrected it.
+- [ ] The scoped implementation commit includes `plans/README.md` and this plan file, is pushed to `origin/master`, and contains no `brand/` path.
 
 ## STOP conditions
 
